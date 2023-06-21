@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Visitor {
+  id       Int      @id @default(autoincrement())
+  name     String
+  reviews  Review[]
+  ratings  Rating[]
+  comments Comment[]
+}
+
+model Review {
+  id             Int          @id @default(autoincrement())
+  content        String
+  visitor        Visitor      @relation(fields: [visitorId], references: [id])
+  visitorId      Int
+  myObject       MyObject     @relation(fields: [objectId], references: [id])
+  objectId       Int
+  tripAdvisor    TripAdvisor @relation(fields: [tripAdvisorId], references: [id])
+  tripAdvisorId  Int
+  ratingValue Int
+}
+
+
+model MyObject {
+  id       Int       @id @default(autoincrement())
+  name     String
+  location     String
+  description     String
+  type String
+  reviews  Review[]
+  ratings  Rating[]
+}
+
+model Rating {
+  id           Int          @id @default(autoincrement())
+  value        Int
+  visitor      Visitor      @relation(fields: [visitorId], references: [id])
+  visitorId    Int
+  myObject       MyObject       @relation(fields: [objectId], references: [id])
+  objectId     Int
+  tripAdvisor  TripAdvisor  @relation(fields: [tripAdvisorId], references: [id])
+  tripAdvisorId Int
+}
+
+model Comment {
+  id           Int          @id @default(autoincrement())
+  content      String
+  visitor      Visitor      @relation(fields: [visitorId], references: [id])
+  visitorId    Int
+  tripAdvisor  TripAdvisor  @relation(fields: [tripAdvisorId], references: [id])
+  tripAdvisorId Int
+}
+
+model TripAdvisor {
+  id           Int          @id @default(autoincrement())
+  name         String
+  reviews      Review[]
+  ratings      Rating[]
+  comments     Comment[]
+}
